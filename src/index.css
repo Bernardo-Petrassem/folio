@@ -1,0 +1,103 @@
+@import "tailwindcss";
+
+@custom-variant dark (&:where(.dark, .dark *));
+
+@theme {
+  --font-sans: "Outfit", ui-sans-serif, system-ui, sans-serif;
+  --font-serif: "Newsreader", "Iowan Old Style", Palatino, serif;
+  --color-bg: var(--bg);
+  --color-surface: var(--surface);
+  --color-page: var(--page);
+  --color-fg: var(--fg);
+  --color-muted: var(--muted);
+  --color-subtle: var(--subtle);
+  --color-accent: var(--accent);
+  --color-accent-fg: var(--accent-fg);
+  --color-border: var(--border);
+  --color-ring: var(--ring);
+  --color-danger: var(--danger);
+  --color-cover-ink: var(--cover-ink);
+  --shadow-border: var(--elev-border);
+  --shadow-page: var(--elev-page);
+  --shadow-bar: var(--elev-bar);
+}
+
+:root {
+  --bg: #e8e2d6;
+  --surface: #f4efe4;
+  --page: #fffcf6;
+  --fg: #1c1915;
+  --muted: #6f675c;
+  --subtle: #9a9286;
+  --accent: #3d4a42;
+  --accent-fg: #f7f3eb;
+  --border: color-mix(in oklab, var(--fg) 12%, transparent);
+  --ring: color-mix(in oklab, var(--accent) 55%, transparent);
+  --danger: #9a3f35;
+  --cover-ink: #f4efe4;
+  --elev-border: 0 0 0 1px rgba(28, 25, 21, 0.06), 0 1px 2px -1px rgba(28, 25, 21, 0.06);
+  --elev-page: 0 0 0 1px rgba(28, 25, 21, 0.05), 0 12px 32px -12px rgba(28, 25, 21, 0.18);
+  --elev-bar: 0 0 0 1px rgba(28, 25, 21, 0.06), 0 8px 24px -8px rgba(28, 25, 21, 0.14);
+}
+
+.dark {
+  --bg: #12110f;
+  --surface: #1a1916;
+  --page: #1e1c18;
+  --fg: #f3eee4;
+  --muted: #a39a8c;
+  --subtle: #7a7368;
+  --accent: #d4cfc4;
+  --accent-fg: #1a1916;
+  --border: color-mix(in oklab, var(--fg) 12%, transparent);
+  --ring: color-mix(in oklab, var(--accent) 45%, transparent);
+  --danger: #e07a70;
+  --cover-ink: #f4efe4;
+  --elev-border: 0 0 0 1px rgba(243, 238, 228, 0.08);
+  --elev-page: 0 0 0 1px rgba(243, 238, 228, 0.08), 0 18px 40px -16px rgba(0, 0, 0, 0.55);
+  --elev-bar: 0 0 0 1px rgba(243, 238, 228, 0.08), 0 10px 28px -12px rgba(0, 0, 0, 0.45);
+}
+
+@layer base {
+  html { -webkit-font-smoothing: antialiased; }
+  body {
+    background: var(--bg);
+    color: var(--fg);
+    font-family: var(--font-sans);
+    margin: 0;
+    min-height: 100dvh;
+  }
+  button:not(:disabled), [role="button"]:not(:disabled) { cursor: pointer; }
+  #root { min-height: 100dvh; }
+}
+
+.page-body {
+  font-family: var(--font-serif);
+  font-size: 1.125rem;
+  line-height: 1.7;
+}
+.page-body:empty:before {
+  content: attr(data-placeholder);
+  color: var(--subtle);
+  font-style: italic;
+}
+.page-body p { margin: 0 0 0.9em; }
+.page-body h2 {
+  font-family: var(--font-serif);
+  font-size: 1.45rem;
+  font-weight: 600;
+  margin: 0 0 0.7em;
+}
+
+.desk-grid {
+  background-image:
+    radial-gradient(ellipse 80% 50% at 50% -10%, color-mix(in oklab, var(--fg) 6%, transparent), transparent 60%),
+    linear-gradient(180deg, color-mix(in oklab, var(--surface) 55%, var(--bg)), var(--bg));
+}
+
+@keyframes fade-up {
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: none; }
+}
+.anim-in { animation: fade-up 0.35s cubic-bezier(0.22, 1, 0.36, 1) both; }
+@media (prefers-reduced-motion: reduce) { .anim-in { animation: none; } }
