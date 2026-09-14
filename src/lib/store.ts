@@ -296,10 +296,10 @@ export const useStore = create<State>()(
         const now = Date.now();
         const item: TempHighlight = {
           id: uid(),
-          userId: CURRENT_USER_ID,
           title,
           sourceLabel,
           kind,
+          userId: CURRENT_USER_ID,
           createdAt: now,
           expiresAt: now + DURATION_MS[duration],
           duration,
@@ -342,6 +342,21 @@ export const useStore = create<State>()(
         extensions: s.extensions,
         waterGlasses: s.waterGlasses,
       }),
+      merge: (persisted, current) => {
+        const p = (persisted ?? {}) as Partial<State>;
+        return {
+          ...current,
+          ...p,
+          books: Array.isArray(p.books) ? p.books : current.books,
+          posts: Array.isArray(p.posts) ? p.posts : current.posts,
+          yarns: Array.isArray(p.yarns) ? p.yarns : current.yarns,
+          highlights: Array.isArray(p.highlights) ? p.highlights : current.highlights,
+          tempHighlights: Array.isArray(p.tempHighlights) ? p.tempHighlights : current.tempHighlights,
+          identityPeople: Array.isArray(p.identityPeople) ? p.identityPeople : current.identityPeople,
+          extensions: Array.isArray(p.extensions) ? p.extensions : current.extensions,
+          waterGlasses: typeof p.waterGlasses === "number" ? p.waterGlasses : current.waterGlasses,
+        };
+      },
     },
   ),
 );
