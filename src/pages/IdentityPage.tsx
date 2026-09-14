@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { Link, useParams } from "react-router-dom";
 import { Avatar } from "@/components/Avatar";
 import { useStore } from "@/lib/store";
@@ -9,26 +9,34 @@ export function IdentityPage() {
   const { userId } = useParams();
   const id = userId ?? CURRENT_USER_ID;
   const isMe = id === CURRENT_USER_ID;
-  const user = USERS.find((u) => u.id === id) ?? USERS[0];
-  const highlights = useStore((s) => s.highlights.filter((h) => h.userId === id));
-  const tempHighlights = useStore((s) => s.tempHighlights.filter((th) => th.userId === id));
-  const identityPeople = useStore((s) => s.identityPeople.filter((p) => p.userId === id));
-  const yarns = useStore((s) => s.yarns.filter((y) => y.ownerId === id));
+  const user = USERS.find((u) => u.id === id) ?? USERS[0]!;
+  const allHighlights = useStore((s) => s.highlights);
+  const allTemp = useStore((s) => s.tempHighlights);
+  const allPeople = useStore((s) => s.identityPeople);
+  const allYarns = useStore((s) => s.yarns);
+  const allBooks = useStore((s) => s.books);
   const purgeExpiredTemp = useStore((s) => s.purgeExpiredTemp);
   const addTempHighlight = useStore((s) => s.addTempHighlight);
   const addHighlight = useStore((s) => s.addHighlight);
-  const books = useStore((s) => s.books.filter((b) => b.ownerId === id));
+  const highlights = useMemo(() => allHighlights.filter((h) => h.userId === id), [allHighlights, id]);
+  const tempHighlights = useMemo(() => allTemp.filter((th) => th.userId === id), [allTemp, id]);
+  const identityPeople = useMemo(() => allPeople.filter((p) => p.userId === id), [allPeople, id]);
+  const yarns = useMemo(() => allYarns.filter((y) => y.ownerId === id), [allYarns, id]);
+  const books = useMemo(() => allBooks.filter((b) => b.ownerId === id), [allBooks, id]);
   const [showTempForm, setShowTempForm] = useState(false);
   const [tempTitle, setTempTitle] = useState("");
   const [tempDuration, setTempDuration] = useState<TempDuration>("7d");
 
   useEffect(() => {
     purgeExpiredTemp();
-    const t = window.setInterval(() => purgeExpiredTemp(), 30_000);
-    return () => clearInterval(t);
-  }, [purgeExpiredTemp]);
+    const timer = window.setInterval(() => purgeExpiredTemp(), 30_000);
+    return () => clearInterval(timer);
+  }, []);
 
-  const activeTemp = tempHighlights.filter((th) => th.expiresAt > Date.now());
+  const activeTemp = useMemo(
+    () => tempHighlights.filter((th) => th.expiresAt > Date.now()),
+    [tempHighlights],
+  );
 
   return (
     <div className="px-4 pt-6 pb-10">
