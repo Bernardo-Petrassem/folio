@@ -308,9 +308,11 @@ export const useStore = create<State>()(
       },
       purgeExpiredTemp: () => {
         const now = Date.now();
-        set((s) => ({
-          tempHighlights: s.tempHighlights.filter((th) => th.expiresAt > now),
-        }));
+        set((s) => {
+          const next = s.tempHighlights.filter((th) => th.expiresAt > now);
+          if (next.length === s.tempHighlights.length) return s;
+          return { tempHighlights: next };
+        });
       },
       addIdentityPerson: (personId, reason) => {
         if (get().identityPeople.some((p) => p.personId === personId && p.userId === CURRENT_USER_ID)) return;
