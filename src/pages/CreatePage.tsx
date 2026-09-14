@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import { Video, Type, BookPlus } from "lucide-react";
 import { useStore } from "@/lib/store";
@@ -9,7 +9,8 @@ export function CreatePage() {
   const createTextPost = useStore((s) => s.createTextPost);
   const createVideoPost = useStore((s) => s.createVideoPost);
   const createBook = useStore((s) => s.createBook);
-  const yarns = useStore((s) => s.yarns.filter((y) => y.ownerId === CURRENT_USER_ID));
+  const allYarns = useStore((s) => s.yarns);
+  const yarns = useMemo(() => allYarns.filter((y) => y.ownerId === CURRENT_USER_ID), [allYarns]);
 
   const [mode, setMode] = useState<"menu" | "video" | "text">("menu");
   const [text, setText] = useState("");

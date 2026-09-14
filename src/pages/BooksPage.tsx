@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { BookPlus, Trash2 } from "lucide-react";
 import { useStore } from "@/lib/store";
@@ -8,10 +8,11 @@ import { formatRelative, htmlToText, wordCount } from "@/lib/utils";
 
 export function BooksPage() {
   const navigate = useNavigate();
-  const books = useStore((s) => s.books.filter((b) => b.ownerId === CURRENT_USER_ID));
+  const allBooks = useStore((s) => s.books);
   const createBook = useStore((s) => s.createBook);
   const deleteBook = useStore((s) => s.deleteBook);
   const updateBook = useStore((s) => s.updateBook);
+  const books = useMemo(() => allBooks.filter((b) => b.ownerId === CURRENT_USER_ID), [allBooks]);
   const [open, setOpen] = useState(false);
   const [title, setTitle] = useState("");
   const [cover, setCover] = useState<CoverId>("olive");
