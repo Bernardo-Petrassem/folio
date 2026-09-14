@@ -1,5 +1,17 @@
 @import "tailwindcss";
 
+/* folio-fallback: keeps the app readable even if utility CSS fails to load */
+html, body, #root {
+  min-height: 100%;
+}
+body {
+  margin: 0;
+  background-color: #e8e2d6;
+  color: #1c1915;
+  font-family: "Outfit", ui-sans-serif, system-ui, sans-serif;
+}
+
+
 @custom-variant dark (&:where(.dark, .dark *));
 
 @theme {
