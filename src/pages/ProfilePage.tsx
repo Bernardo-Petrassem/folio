@@ -12,14 +12,17 @@ export function ProfilePage() {
   const { userId } = useParams();
   const id = userId ?? CURRENT_USER_ID;
   const isMe = id === CURRENT_USER_ID;
-  const user = USERS.find((u) => u.id === id) ?? USERS[0];
-  const posts = useStore((s) => s.posts.filter((p) => p.authorId === id));
-  const yarns = useStore((s) => s.yarns.filter((y) => y.ownerId === id));
-  const books = useStore((s) => s.books.filter((b) => b.ownerId === id));
+  const user = USERS.find((u) => u.id === id) ?? USERS[0]!;
+  const allPosts = useStore((s) => s.posts);
+  const allYarns = useStore((s) => s.yarns);
+  const allBooks = useStore((s) => s.books);
   const toggleLike = useStore((s) => s.toggleLike);
   const toggleFavorite = useStore((s) => s.toggleFavorite);
   const navigate = useNavigate();
   const [mediaTab, setMediaTab] = useState<"posts" | "midias">("posts");
+  const posts = useMemo(() => allPosts.filter((p) => p.authorId === id), [allPosts, id]);
+  const yarns = useMemo(() => allYarns.filter((y) => y.ownerId === id), [allYarns, id]);
+  const books = useMemo(() => allBooks.filter((b) => b.ownerId === id), [allBooks, id]);
   const textPosts = useMemo(() => posts.filter((p) => p.kind === "text"), [posts]);
   const mediaPosts = useMemo(() => posts.filter((p) => p.kind === "video"), [posts]);
 
