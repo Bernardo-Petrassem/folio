@@ -35,6 +35,33 @@ export type User = {
   bio?: string;
 };
 
+/** Paleta e superfície da Identidade — única por pessoa, não feed genérico */
+export type IdentityTheme = {
+  accent: string; // hex principal
+  banner: string; // hex ou gradient hint
+  ink: string; // texto sobre banner
+  paper: string; // fundo de cartões da identidade
+};
+
+export type IdentityProfile = {
+  userId: string;
+  /** Frase curta que define quem você é neste momento */
+  statement: string;
+  /** Bio longa da identidade (não do perfil social) */
+  identityBio: string;
+  theme: IdentityTheme;
+  /** URL ou data-url de banner (mock: usamos gradient se vazio) */
+  bannerImage?: string;
+  updatedAt: number;
+};
+
+export const DEFAULT_IDENTITY_THEMES: Record<string, IdentityTheme> = {
+  "u-me": { accent: "#3d4a42", banner: "#2c3530", ink: "#f4efe4", paper: "#f7f3eb" },
+  "u-leo": { accent: "#6b5344", banner: "#4a3a30", ink: "#f4efe4", paper: "#f7f3eb" },
+  "u-ana": { accent: "#3a4450", banner: "#2a323b", ink: "#f4efe4", paper: "#f7f3eb" },
+  "u-rui": { accent: "#4a5540", banner: "#343c2e", ink: "#f4efe4", paper: "#f7f3eb" },
+};
+
 export type PostKind = "text" | "video";
 
 export type Post = {
