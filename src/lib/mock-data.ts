@@ -1,4 +1,15 @@
-import type { Book, Extension, Highlight, IdentityPerson, Post, TempHighlight, User, Yarn } from "./types";
+import type {
+  Book,
+  Extension,
+  Highlight,
+  IdentityPerson,
+  IdentityProfile,
+  Post,
+  TempHighlight,
+  User,
+  Yarn,
+} from "./types";
+import { DEFAULT_IDENTITY_THEMES } from "./types";
 
 export const CURRENT_USER_ID = "u-me";
 
@@ -10,6 +21,38 @@ export const USERS: User[] = [
 ];
 
 const t = Date.now();
+
+export const SEED_IDENTITY_PROFILES: IdentityProfile[] = [
+  {
+    userId: "u-me",
+    statement: "Escrevo o que ainda não existe e treino o corpo que sustenta a mente.",
+    identityBio:
+      "Livros, yarns de treino e projetos longos. A identidade aqui não é um feed — é a curadoria do que realmente me representa.",
+    theme: DEFAULT_IDENTITY_THEMES["u-me"]!,
+    updatedAt: t - 86_400_000,
+  },
+  {
+    userId: "u-leo",
+    statement: "Consistência > motivação.",
+    identityBio: "Trajetórias de força e rotina. O resto é ruído.",
+    theme: DEFAULT_IDENTITY_THEMES["u-leo"]!,
+    updatedAt: t - 172_800_000,
+  },
+  {
+    userId: "u-ana",
+    statement: "Forma e significado no mesmo gesto.",
+    identityBio: "Design como identidade visível.",
+    theme: DEFAULT_IDENTITY_THEMES["u-ana"]!,
+    updatedAt: t - 200_000_000,
+  },
+  {
+    userId: "u-rui",
+    statement: "Som e silêncio no mesmo dia.",
+    identityBio: "Música como rotina e presença.",
+    theme: DEFAULT_IDENTITY_THEMES["u-rui"]!,
+    updatedAt: t - 90_000_000,
+  },
+];
 
 export const SEED_BOOKS: Book[] = [
   {
@@ -129,9 +172,9 @@ export const SEED_YARNS: Yarn[] = [
     description: "Do primeiro dia ao ritmo atual.",
     createdAt: t - 400 * 86_400_000,
     videos: [
-      { id: "yv1", title: "Dia 1 — recomeço", date: "2025-03-12", hue: 150, likes: [], comments: [] },
-      { id: "yv2", title: "Semana 4 — ritmo", date: "2025-04-08", hue: 155, likes: ["u-me"], comments: [] },
-      { id: "yv3", title: "Verão — carga alta", date: "2025-07-22", hue: 35, likes: [], comments: [] },
+      { id: "yv1", title: "Dia 1 — primeiras séries", date: "2025-03-12", hue: 150, likes: [], comments: [] },
+      { id: "yv2", title: "Abril — progresso nas barras", date: "2025-04-18", hue: 155, likes: ["u-leo"], comments: [] },
+      { id: "yv3", title: "Verão — novo volume", date: "2025-07-02", hue: 160, likes: [], comments: [] },
       { id: "yv4", title: "Outono — pausa e retorno", date: "2025-10-09", hue: 40, likes: [], comments: [] },
       { id: "yv5", title: "2026 — consistência", date: "2026-01-20", hue: 165, likes: ["u-ana"], comments: [] },
       { id: "yv6", title: "Março 2026 — recorde leve", date: "2026-03-05", hue: 170, likes: [], comments: [] },
