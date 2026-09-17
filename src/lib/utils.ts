@@ -37,3 +37,7 @@ export function wordCount(html: string) {
   const t = htmlToText(html);
   return t ? t.split(/\s+/).filter(Boolean).length : 0;
 }
+
+export function escapeRegExp(s: string) {
+  return s.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+}

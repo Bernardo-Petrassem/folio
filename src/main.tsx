@@ -2,6 +2,7 @@ import { Component, type ErrorInfo, type ReactNode, StrictMode } from "react";
 import { createRoot } from "react-dom/client";
 import "./index.css";
 import App from "./App";
+import { ThemeProvider } from "@/components/theme-provider";
 
 class ErrorBoundary extends Component<
   { children: ReactNode },
@@ -62,7 +63,7 @@ class ErrorBoundary extends Component<
               } catch {
                 /* ignore */
               }
-              window.location.href = "/perfil";
+              window.location.href = "/identidade";
             }}
           >
             Limpar dados e recarregar
@@ -75,14 +76,16 @@ class ErrorBoundary extends Component<
 }
 
 const root = document.getElementById("root");
- if (!root) {
+if (!root) {
   throw new Error("Elemento #root não encontrado no HTML");
 }
 
 createRoot(root).render(
   <StrictMode>
     <ErrorBoundary>
-      <App />
+      <ThemeProvider>
+        <App />
+      </ThemeProvider>
     </ErrorBoundary>
   </StrictMode>,
 );
