@@ -7,6 +7,7 @@ import type {
   Highlight,
   HighlightKind,
   IdentityPerson,
+  IdentityProfile,
   Page,
   Post,
   TempDuration,
@@ -14,13 +15,14 @@ import type {
   Yarn,
   YarnVideo,
 } from "./types";
-import { COVER_ORDER } from "./types";
+import { COVER_ORDER, DEFAULT_IDENTITY_THEMES } from "./types";
 import {
   CURRENT_USER_ID,
   SEED_BOOKS,
   SEED_EXTENSIONS,
   SEED_HIGHLIGHTS,
   SEED_IDENTITY_PEOPLE,
+  SEED_IDENTITY_PROFILES,
   SEED_POSTS,
   SEED_TEMP,
   SEED_YARNS,
@@ -46,6 +48,7 @@ type State = {
   highlights: Highlight[];
   tempHighlights: TempHighlight[];
   identityPeople: IdentityPerson[];
+  identityProfiles: IdentityProfile[];
   extensions: Extension[];
   waterGlasses: number;
 
@@ -73,6 +76,12 @@ type State = {
   purgeExpiredTemp: () => void;
   addIdentityPerson: (personId: string, reason: string) => void;
   removeIdentityPerson: (id: string) => void;
+  updateIdentityProfile: (
+    userId: string,
+    patch: Partial<Pick<IdentityProfile, "statement" | "identityBio" | "bannerImage">> & {
+      theme?: Partial<IdentityProfile["theme"]>;
+    },
+  ) => void;
 
   toggleExtension: (id: string) => void;
   addWaterGlass: () => void;
@@ -87,6 +96,7 @@ export const useStore = create<State>()(
       highlights: SEED_HIGHLIGHTS,
       tempHighlights: SEED_TEMP,
       identityPeople: SEED_IDENTITY_PEOPLE,
+      identityProfiles: SEED_IDENTITY_PROFILES,
       extensions: SEED_EXTENSIONS,
       waterGlasses: 0,
 
@@ -296,10 +306,10 @@ export const useStore = create<State>()(
         const now = Date.now();
         const item: TempHighlight = {
           id: uid(),
+          userId: CURRENT_USER_ID,
           title,
           sourceLabel,
           kind,
-          userId: CURRENT_USER_ID,
           createdAt: now,
           expiresAt: now + DURATION_MS[duration],
           duration,
@@ -325,6 +335,21 @@ export const useStore = create<State>()(
       },
       removeIdentityPerson: (id) =>
         set((s) => ({ identityPeople: s.identityPeople.filter((p) => p.id !== id) })),
+      updateIdentityProfile: (userId, patch) =>
+        set((s) => {
+          const existing = s.identityProfiles.find((p) => p.userId === userId);
+          const baseTheme = existing?.theme ?? DEFAULT_IDENTITY_THEMES[userId] ?? DEFAULT_IDENTITY_THEMES["u-me"]!;
+          const next: IdentityProfile = {
+            userId,
+            statement: patch.statement ?? existing?.statement ?? "",
+            identityBio: patch.identityBio ?? existing?.identityBio ?? "",
+            bannerImage: patch.bannerImage ?? existing?.bannerImage,
+            theme: { ...baseTheme, ...(patch.theme ?? {}) },
+            updatedAt: Date.now(),
+          };
+          const others = s.identityProfiles.filter((p) => p.userId !== userId);
+          return { identityProfiles: [...others, next] };
+        }),
 
       toggleExtension: (id) =>
         set((s) => ({
@@ -341,6 +366,7 @@ export const useStore = create<State>()(
         highlights: s.highlights,
         tempHighlights: s.tempHighlights,
         identityPeople: s.identityPeople,
+        identityProfiles: s.identityProfiles,
         extensions: s.extensions,
         waterGlasses: s.waterGlasses,
       }),
@@ -355,6 +381,7 @@ export const useStore = create<State>()(
           highlights: Array.isArray(p.highlights) ? p.highlights : current.highlights,
           tempHighlights: Array.isArray(p.tempHighlights) ? p.tempHighlights : current.tempHighlights,
           identityPeople: Array.isArray(p.identityPeople) ? p.identityPeople : current.identityPeople,
+          identityProfiles: Array.isArray(p.identityProfiles) ? p.identityProfiles : current.identityProfiles,
           extensions: Array.isArray(p.extensions) ? p.extensions : current.extensions,
           waterGlasses: typeof p.waterGlasses === "number" ? p.waterGlasses : current.waterGlasses,
         };
