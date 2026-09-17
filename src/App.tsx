@@ -15,7 +15,7 @@ export default function App() {
       <Routes>
         <Route path="/livro/:bookId" element={<BookEditorPage />} />
         <Route element={<Shell />}>
-          <Route path="/" element={<Navigate to="/perfil" replace />} />
+          <Route path="/" element={<Navigate to="/identidade" replace />} />
           <Route path="/home" element={<HomePage />} />
           <Route path="/criar" element={<CreatePage />} />
           <Route path="/perfil" element={<ProfilePage />} />
@@ -27,7 +27,7 @@ export default function App() {
           <Route path="/livros" element={<BooksPage />} />
           <Route path="/extensoes" element={<ExtensionsPage />} />
         </Route>
-        <Route path="*" element={<Navigate to="/perfil" replace />} />
+        <Route path="*" element={<Navigate to="/identidade" replace />} />
       </Routes>
     </BrowserRouter>
   );
